@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 import time
 # LOG_FILE = '16GBFile.log-001'
-LOG_FILE = '../hw2/40MBFile.log'
+LOG_FILE = '40MBFile.log'
 
 
 
@@ -16,9 +16,11 @@ def create_producer():
 
 producer = create_producer()
 with open(LOG_FILE, 'r') as file:
-    for line in file:
-        producer.send('log', line)
-        print(f'sending log == > {line}')
+    print(f'starting reading file')
+    while log:= file.readline():
+        log = log.encode('utf-8')
+        producer.send('log', log)
+        print(f'sending log == > {log}')
         time.sleep(0.1)  # Pause to avoid overloading Kafka
 
 producer.close()

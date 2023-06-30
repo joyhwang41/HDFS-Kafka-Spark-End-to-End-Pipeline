@@ -6,5 +6,7 @@ ADD . /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "./app.py"]
+ PYTHONNONBUFFER 1
 
+CMD ["python", "./app.py"]
+  
