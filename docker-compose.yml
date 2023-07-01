@@ -39,7 +39,7 @@ services:
       - python_service
     command: > 
       /bin/bash -c "
-      spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 your_spark_job.py
+      spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 app.py
       "
 
   namenode:
