@@ -52,17 +52,6 @@ raw_df = spark \
     .load() \
     .selectExpr("CAST(value AS STRING)")
 
-query_raw = raw_df \
-    .writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .trigger(processingTime='5 seconds') \
-    .option("truncate", "false") \
-    .option("numRows", 10) \
-    .start()
-
-query_raw.awaitTermination()
-
 split_col = split(raw_df['value'], ' ')
 df = raw_df.withColumn('host', split_col.getItem(0)) \
     .withColumn('timestamp', to_timestamp(split_col.getItem(3).substr(2, 20), "yyyy-MM-dd HH:mm:ss")) \
