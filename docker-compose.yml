@@ -39,13 +39,15 @@ services:
       - python_service
 
   namenode:
-      image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-      volumes:
-        - hadoop_namenode:/hadoop/dfs/name
-      environment:
-        - CLUSTER_NAME=test_cluster
-      env_file:
-        - ./hadoop.env
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test_cluster
+    env_file:
+      - ./hadoop.env
+    networks:
+      - hadoop_network
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
@@ -54,10 +56,16 @@ services:
     env_file:
       - ./hadoop.env
     environment:
-      SERVICE_PRECONDITION: "namenode:50070"
+      SERVICE_PRECONDITION: "namenode:9870"
     depends_on:
       - namenode
+    networks:
+      - hadoop_network
+
 volumes:
   hadoop_namenode:
   hadoop_datanode:
 
+networks:
+  hadoop_network:
+    driver: bridge
