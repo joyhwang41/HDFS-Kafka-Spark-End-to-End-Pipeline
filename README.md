@@ -45,11 +45,11 @@ schema = StructType([
 ### Architecture of the project
 ![Architecture](architecture.png)
 
-
-F
-
-
-
+1. In the log simulator, we use lazy loading aproach to read the log line by line.
+2. We then use the single topic singel thread ingle node to have the simplest case.
+3. We consume the data from spark directly using the integration of kafka and the new spark streaming service(Structured Streaming).
+4. We can transform the datarame using classic high level Spark SQL api (like what we've done in the `Section_A_Log_Analysis_Demo.ipynb` notebook)
+5. We set the default window size on this nalysis to be 20 seconds, and sliding frequency to be 10 seconds, and the windows will be turned from the streaming dataframe in to the HDFS(Hadoop File System) in parquest format.
 
 
 ### Spark analysis rationale
@@ -74,8 +74,16 @@ update the name of the log file
 
 ``` python
 # ./python_servie/app.py
-
 LOG_FILE = NAME_OF_THE_LOG_FILE
+```
 
+Then run the docker-compose
 
 ```
+docker-compose up --build
+```
+
+## Ourput
+
+
+
