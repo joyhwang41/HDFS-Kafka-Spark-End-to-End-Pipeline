@@ -4,8 +4,6 @@ import time
 # LOG_FILE = '16GBFile.log-001'
 LOG_FILE = './40MBFile.log'
 
-
-
 def create_producer():
     while True:
         try:
