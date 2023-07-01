@@ -1,4 +1,3 @@
-
 import time
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import window, col, from_json, to_timestamp, split
@@ -62,8 +61,8 @@ df = raw_df.withColumn('host', split_col.getItem(0)) \
 
 
 # Stream for rate limiter service
-df_host = df.groupBy(
-    window(df.timestamp, "20 seconds", "10 seconds"),
+df_host = df.withWatermark("timestamp", "30 seconds").groupBy(
+    window(df.timestamp, "20 seconds"),
     df.host
 ).count()
 
@@ -73,8 +72,8 @@ query1 = df_host.writeStream \
     .start()
 
 # Stream for cyber security alert manager
-df_response = df.filter(col("http_response") >= 400).groupBy(
-    window(df.timestamp, "20 seconds", "10 seconds"),
+df_response = df.filter(col("http_response") >= 400).withWatermark("timestamp", "30 seconds").groupBy(
+    window(df.timestamp, "20 seconds"),
     df.http_response
 ).count()
 
@@ -85,4 +84,3 @@ query2 = df_response.writeStream \
 
 query1.awaitTermination()
 query2.awaitTermination()
-
