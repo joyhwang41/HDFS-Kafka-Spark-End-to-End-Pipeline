@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 import time
 # LOG_FILE = '16GBFile.log-001'
-LOG_FILE = '40MBFile.log'
+LOG_FILE = './40MBFile.log'
 
 
 
