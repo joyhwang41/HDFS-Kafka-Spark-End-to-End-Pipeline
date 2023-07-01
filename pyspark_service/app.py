@@ -16,7 +16,7 @@ schema = StructType([
 
 
 
-attempt_limit = 10  # Maximum number of attempts to create raw_df.
+attempt_limit = 40  # Maximum number of attempts to create raw_df.
 attempt_count = 0  # Initial count of attempts.
 
 while attempt_count < attempt_limit:
@@ -36,7 +36,7 @@ while attempt_count < attempt_limit:
         # If an exception occurred, increment the attempt counter and sleep for a bit before trying again.
         attempt_count += 1
         print(f"Attempt {attempt_count} of {attempt_limit} failed with error: {e}. Retrying in 5 seconds...")
-        time.sleep(5)
+        time.sleep(10)
 
 # If the DataFrame still isn't created after all attempts, raise an exception.
 if attempt_count == attempt_limit:
