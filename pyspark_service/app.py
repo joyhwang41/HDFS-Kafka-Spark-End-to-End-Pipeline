@@ -52,12 +52,20 @@ raw_df = spark \
     .load() \
     .selectExpr("CAST(value AS STRING)")
 
+print('success get the raw_df')
+raw_df.show(10)
+print('#'*20)
+
 split_col = split(raw_df['value'], ' ')
 df = raw_df.withColumn('host', split_col.getItem(0)) \
     .withColumn('timestamp', to_timestamp(split_col.getItem(3).substr(2, 20), "yyyy-MM-dd HH:mm:ss")) \
     .withColumn('request', split_col.getItem(5).substr(2, 1000)) \
     .withColumn('http_response', split_col.getItem(8).cast(IntegerType())) \
     .withColumn('bytes_sent', split_col.getItem(9).cast(IntegerType()))
+
+print('success get the df')
+df.show(10)
+print('#'*20)
 
 query = df \
     .writeStream \
