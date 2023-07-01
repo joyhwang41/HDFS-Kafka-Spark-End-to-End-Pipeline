@@ -2,11 +2,11 @@ FROM python:3.9
 
 WORKDIR /app
 
-ADD . /app
+RUN pip install --upgrade pip
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
-RUN pip install -r requirements.txt
+# Copy source code
+COPY . .
 
-ENV PYTHONNONBUFFER 1
-
-CMD ["python", "./app.py"]
-  
+CMD ["python", "app.py"]
