@@ -87,13 +87,13 @@ docker-compose up --build
 ### top ten frenquent host
 ![Architecture](host_freq.png)
 ### top ten status count
-![Architecture](status_count.png.png)
+![Architecture](status_count.png)
 
 ### top ten log status count
 ![Architecture](log_status_count.png)
-
 ### top ten log status count
-![Architecture](log_status_count.png)
+![Architecture](log_status_graph.png)
+
 
 
 
