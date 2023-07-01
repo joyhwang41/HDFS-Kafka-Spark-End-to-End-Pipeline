@@ -67,7 +67,7 @@ df_host = df.withWatermark("timestamp", "30 seconds").groupBy(
 ).count()
 
 query1 = df_host.writeStream \
-    .outputMode("append") \
+    .outputMode("update") \
     .format("console") \
     .start()
 
@@ -78,7 +78,7 @@ df_response = df.filter(col("http_response") >= 400).withWatermark("timestamp", 
 ).count()
 
 query2 = df_response.writeStream \
-    .outputMode("append") \
+    .outputMode("update") \
     .format("console") \
     .start()
 
