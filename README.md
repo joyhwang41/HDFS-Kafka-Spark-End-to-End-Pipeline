@@ -84,7 +84,16 @@ docker-compose up --build
 
 ## Simple Ourput
 
+### top ten frenquent host
+![Architecture](host_freq.png)
+### top ten status count
+![Architecture](status_count.png.png)
 
+### top ten log status count
+![Architecture](log_status_count.png)
+
+### top ten log status count
+![Architecture](log_status_count.png)
 
 
 
