@@ -1,3 +1,5 @@
+
+import time
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import window, col, from_json, to_timestamp, split
 from pyspark.sql.types import StringType, StructType, StructField, TimestampType, IntegerType
@@ -11,6 +13,37 @@ schema = StructType([
     StructField("http_response", IntegerType()),
     StructField("bytes_sent", IntegerType())
 ])
+
+
+
+attempt_limit = 10  # Maximum number of attempts to create raw_df.
+attempt_count = 0  # Initial count of attempts.
+
+while attempt_count < attempt_limit:
+    try:
+        raw_df = spark \
+            .readStream \
+            .format("kafka") \
+            .option("kafka.bootstrap.servers", "kafka:9092") \
+            .option("subscribe", "log") \
+            .load() \
+            .selectExpr("CAST(value AS STRING)")
+
+        # If the DataFrame is created successfully, break out of the loop.
+        break
+
+    except Exception as e:
+        # If an exception occurred, increment the attempt counter and sleep for a bit before trying again.
+        attempt_count += 1
+        print(f"Attempt {attempt_count} of {attempt_limit} failed with error: {e}. Retrying in 5 seconds...")
+        time.sleep(5)
+
+# If the DataFrame still isn't created after all attempts, raise an exception.
+if attempt_count == attempt_limit:
+    raise RuntimeError("Failed to create DataFrame after several attempts. Check Kafka service.")
+
+
+
 
 raw_df = spark \
     .readStream \
