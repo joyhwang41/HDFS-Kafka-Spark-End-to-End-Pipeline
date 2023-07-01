@@ -52,9 +52,16 @@ raw_df = spark \
     .load() \
     .selectExpr("CAST(value AS STRING)")
 
-print('success get the raw_df')
-raw_df.show(10)
-print('#'*20)
+query_raw = raw_df \
+    .writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .trigger(processingTime='5 seconds') \
+    .option("truncate", "false") \
+    .option("numRows", 10) \
+    .start()
+
+query_raw.awaitTermination()
 
 split_col = split(raw_df['value'], ' ')
 df = raw_df.withColumn('host', split_col.getItem(0)) \
@@ -62,10 +69,6 @@ df = raw_df.withColumn('host', split_col.getItem(0)) \
     .withColumn('request', split_col.getItem(5).substr(2, 1000)) \
     .withColumn('http_response', split_col.getItem(8).cast(IntegerType())) \
     .withColumn('bytes_sent', split_col.getItem(9).cast(IntegerType()))
-
-print('success get the df')
-df.show(10)
-print('#'*20)
 
 query = df \
     .writeStream \
@@ -77,6 +80,7 @@ query = df \
     .start()
 
 query.awaitTermination()
+
 
 
 # # Stream for rate limiter service
