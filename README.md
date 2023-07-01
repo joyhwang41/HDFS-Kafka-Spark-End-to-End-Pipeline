@@ -9,7 +9,7 @@ We will be working on a log data with size of 2.5 GB, the log entry is in the fo
 168.178.113.108 - - [2004-05-18 05:58:48] "GET /Archives/edgar/data/0001439124/000129281422000854/ HTTP/1.0" 500 14101
 ```
 
-We will produce the data using kafka and consume it into PySpark structured streaming data. Here will be the scheme:
+We will produce the data using kafka and consume it into PySpark structured streaming data. Here is the scheme:
 ``` python
 schema = StructType([
     StructField("host", StringType()),
@@ -25,22 +25,20 @@ schema = StructType([
 ``` text
 ├── README.md
 ├── Section_A_Log_Analytics_Demo.ipynb
+├── architecture.png
 ├── data
 ├── docker-compose.yml
-├── hdfs_service
-│   ├── Dockerfile
-│   └── start-hadoop.sh
+├── hadoop.env
 ├── pyspark_service
-│   ├── Dockerfile
-│   ├── app.py
-│   └── requirements.txt
+│   ├── Dockerfile
+│   ├── app.py
+│   └── requirements.txt
 └── python_service
     ├── 40MBFile.log
     ├── Dockerfile
     ├── app.py
-    └── requirements.txt
-
-5 directories, 12 files
+    ├── requirements.txt
+    └── spark_utils.py
 ```
 ### Architecture of the project
 ![Architecture](architecture.png)
@@ -60,6 +58,7 @@ In the Spark analysis section, we will conduct an analysis focus primary on the 
 - Cyber security alert manager, that can detect the surge of certain kind of failed http request, since the high volume of failed http request might be a red flag of service reliabilty or potential cybersecurity issue. For example, high volume of 404 NotFound response code might be indicating a url-bustering attack from a hacker is happening.
 
 The way we achieved this functionality is to have a sliding window counter that will keep tracking on the number of request, using `count` as aggregation function and group by host name for the rate limiter service, and group by `http_response`
+
 
 
 ## Run
@@ -83,7 +82,11 @@ Then run the docker-compose
 docker-compose up --build
 ```
 
-## Ourput
+## Simple Ourput
+
+
+
+
 
 
 
