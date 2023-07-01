@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import split, regexp_extract, col
+from pyspark.sql.functions import split, regexp_extract, col,to_timestamp
 import time
 
 spark = SparkSession.builder.appName("logAnalyzer").getOrCreate()
