@@ -1,0 +1,5 @@
+host_pattern = r'(^\S+\.[\S+\.]+\S+)\s'
+ts_pattern = r'\[(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})]'
+method_uri_protocol_pattern = r'\"(\S+)\s(\S+)\s*(\S*)\"'
+status_pattern = r'\s(\d{3})\s'
+content_size_pattern = r'\s(\d+)$'
