@@ -27,15 +27,29 @@ df = raw_df.withColumn('host', split_col.getItem(0)) \
     .withColumn('http_response', split_col.getItem(8).cast(IntegerType())) \
     .withColumn('bytes_sent', split_col.getItem(9).cast(IntegerType()))
 
-df = df.groupBy(
-    window(df.timestamp, "1 hour"),
+
+# Stream for rate limiter service
+df_host = df.groupBy(
+    window(df.timestamp, "20 seconds", "10 seconds"),
     df.host
 ).count()
 
-query = df.writeStream \
+query1 = df_host.writeStream \
     .outputMode("append") \
-    .format("parquet") \
-    .option("path", "hdfs://hdfs:9000/output.parquet") \
-    .option("checkpointLocation", "/tmp/checkpoints") \
+    .format("console") \
     .start()
-# Define Spark session
+
+# Stream for cyber security alert manager
+df_response = df.filter(col("http_response") >= 400).groupBy(
+    window(df.timestamp, "20 seconds", "10 seconds"),
+    df.http_response
+).count()
+
+query2 = df_response.writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .start()
+
+query1.awaitTermination()
+query2.awaitTermination()
+

@@ -41,9 +41,16 @@ schema = StructType([
     └── requirements.txt
 
 5 directories, 12 files
-
-
 ```
+### Architecture of the project
+![Architecture](architecture.png)
+
+
+F
+
+
+
+
 
 ### Spark analysis rationale
 In the Spark analysis section, we will conduct an analysis focus primary on the host, timestamp ,and the http_response fields. Aiming at specific use case as followed:
@@ -52,5 +59,23 @@ In the Spark analysis section, we will conduct an analysis focus primary on the 
 
 - Cyber security alert manager, that can detect the surge of certain kind of failed http request, since the high volume of failed http request might be a red flag of service reliabilty or potential cybersecurity issue. For example, high volume of 404 NotFound response code might be indicating a url-bustering attack from a hacker is happening.
 
-The way we achieved this functionality is to have a moving window counter that will keep tracking on the number of request, using `count` as aggregation function and group by host name for the rate limiter service, and group by `http_response`
+The way we achieved this functionality is to have a sliding window counter that will keep tracking on the number of request, using `count` as aggregation function and group by host name for the rate limiter service, and group by `http_response`
 
+
+## Run
+
+First get the static log file in the local system.
+
+```
+mv /path/to/the/log ./python_service
+```
+
+update the name of the log file
+
+``` python
+# ./python_servie/app.py
+
+LOG_FILE = NAME_OF_THE_LOG_FILE
+
+
+```
