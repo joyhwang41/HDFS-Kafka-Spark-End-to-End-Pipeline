@@ -37,17 +37,26 @@ services:
     depends_on:
       - kafka
 
-  hdfs:
-    build:
-      context: ./hdfs_service/
-    ports:
-      - "50070:50070"
-      - "50075:50075"
-      - "50090:50090"
-      - "8020:8020"
-      - "9000:9000"
-    volumes:
-      - hdfs-data:/hadoop/dfs/data
+  namenode:
+      image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+      volumes:
+        - hadoop_namenode:/hadoop/dfs/name
+      environment:
+        - CLUSTER_NAME=test_cluster
+      env_file:
+        - ./hadoop.env
 
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    depends_on:
+      - namenode
 volumes:
-  hdfs-data:
+  hadoop_namenode:
+  hadoop_datanode:
+
