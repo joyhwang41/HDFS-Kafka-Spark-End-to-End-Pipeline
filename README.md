@@ -94,6 +94,7 @@ docker-compose up --build
 ### top ten log status count
 ![Architecture](log_status_graph.png)
 
+more viz part and code, please refer to `Section_A_Log_Analytics_Demo.ipynb`
 
 
 
