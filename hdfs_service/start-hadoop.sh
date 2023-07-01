@@ -13,4 +13,5 @@ $HADOOP_PREFIX/sbin/start-yarn.sh
 
 # Keep container running
 tail -f /dev/null
+hdfs namenode -format -force
 
