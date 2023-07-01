@@ -59,28 +59,39 @@ df = raw_df.withColumn('host', split_col.getItem(0)) \
     .withColumn('http_response', split_col.getItem(8).cast(IntegerType())) \
     .withColumn('bytes_sent', split_col.getItem(9).cast(IntegerType()))
 
-
-# Stream for rate limiter service
-df_host = df.withWatermark("timestamp", "30 seconds").groupBy(
-    window(df.timestamp, "20 seconds"),
-    df.host
-).count()
-
-query1 = df_host.writeStream \
-    .outputMode("update") \
+query = df \
+    .writeStream \
+    .outputMode("append") \
     .format("console") \
+    .trigger(processingTime='5 seconds') \
+    .option("truncate", "false") \
+    .option("numRows", 10) \
     .start()
 
-# Stream for cyber security alert manager
-df_response = df.filter(col("http_response") >= 400).withWatermark("timestamp", "30 seconds").groupBy(
-    window(df.timestamp, "20 seconds"),
-    df.http_response
-).count()
+query.awaitTermination()
 
-query2 = df_response.writeStream \
-    .outputMode("update") \
-    .format("console") \
-    .start()
 
-query1.awaitTermination()
-query2.awaitTermination()
+# # Stream for rate limiter service
+# df_host = df.withWatermark("timestamp", "30 seconds").groupBy(
+#     window(df.timestamp, "20 seconds"),
+#     df.host
+# ).count()
+
+# query1 = df_host.writeStream \
+#     .outputMode("update") \
+#     .format("console") \
+#     .start()
+
+# # Stream for cyber security alert manager
+# df_response = df.filter(col("http_response") >= 400).withWatermark("timestamp", "30 seconds").groupBy(
+#     window(df.timestamp, "20 seconds"),
+#     df.http_response
+# ).count()
+
+# query2 = df_response.writeStream \
+#     .outputMode("update") \
+#     .format("console") \
+#     .start()
+
+# query1.awaitTermination()
+# query2.awaitTermination()
